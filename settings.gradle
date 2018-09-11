@@ -1,0 +1,4 @@
+include ':app', ':opencv-sdk', ':tess-two', ':tess-two-test'
+project(':opencv-sdk').projectDir = new File('OpenCV-android-sdk/sdk')
+project(':tess-two').projectDir = new File('tess/tess-two')
+project(':tess-two-test').projectDir = new File('tess/tess-two-test')
