@@ -1,11 +1,17 @@
 #include <jni.h>
 #include <string>
+#include <android/log.h>
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d/features2d.hpp>
 
+
+#include <baseapi.h>
+
 #include <table.h>
 #include <reference.h>
+#include <utils.h>
 
 using namespace std;
 using namespace cv;
@@ -36,10 +42,37 @@ void JNICALL Java_com_machfour_koala_OpenCVActivity_salt(
 }
 
 JNIEXPORT
-void JNICALL Java_com_machfour_koala_ProcessImageActivity_doExtractTable(JNIEnv *env, jobject instance, jlong matAddr) {
-    Mat &image = *(Mat *) matAddr;
-    Table outTable = tableExtract(image);
-    outTable.print(30);
+jstring JNICALL Java_com_machfour_koala_ProcessImageActivity_doExtractTable(
+        JNIEnv *env,
+        jobject instance,
+        jlong matAddr,
+        jstring tessdataPath ) {
+
+    tesseract::TessBaseAPI tesseractApi;
+    const char *nativeTessdataPath = env->GetStringUTFChars(tessdataPath, JNI_FALSE);
+    if (tesseractInit(tesseractApi, nativeTessdataPath) == -1) {
+        //fprintf(stderr, "Could not initialise tesseract API");
+        __android_log_print(ANDROID_LOG_WARN, "doExtractTable()", "Could not initialise tesseract");
+        return env->NewStringUTF("");
+    }
+
+    Table outTable = tableExtract(*(Mat *) matAddr, tesseractApi);
+
+    tesseractApi.End();
+    env->ReleaseStringUTFChars(tessdataPath, nativeTessdataPath);
+
+    std::string tableString = outTable.parseableString();
+    return env->NewStringUTF(tableString.data());
+    /*
+#ifdef REFERENCE_ANDROID
+    __android_log_print(ANDROID_LOG_INFO, "KTable", "%s", tableString.data());
+    //printf("%s", s.data());
+#else
+    printf("%s", s.data());
+#endif
+     */
 }
+
+
 
 }

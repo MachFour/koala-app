@@ -2,6 +2,7 @@ package com.machfour.koala;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,10 @@ public class MainActivity extends AppCompatActivity {
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
+    }
+
+    private void setButtonAsActivityLauncher(Button b, Class<?> activityClass) {
+        b.setOnClickListener(view -> startActivity(new Intent(this, activityClass)));
     }
 
     @Override
@@ -33,26 +38,13 @@ public class MainActivity extends AppCompatActivity {
             s.setAction("Action", null);
             s.show();
         });
-        Button b = findViewById(R.id.open_cv_button);
-        b.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, OpenCVActivity.class);
-            startActivity(intent);
-        });
 
-        Button b2 = findViewById(R.id.camera_button);
-        b2.setOnClickListener(view -> {
-             Intent intent = new Intent(MainActivity.this, CameraActivity.class);
-             startActivity(intent);
-        });
-
-        Button b3 = findViewById(R.id.simple_camera_button);
-        b3.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, SimpleCameraActivity.class);
-            startActivity(intent);
-        });
+        setButtonAsActivityLauncher(findViewById(R.id.open_cv_button), OpenCVActivity.class);
+        setButtonAsActivityLauncher(findViewById(R.id.camera_button), CameraActivity.class);
+        setButtonAsActivityLauncher(findViewById(R.id.simple_camera_button), SimpleCameraActivity.class);
 
         // Example of a call to a native method
-        TextView tv = (TextView) findViewById(R.id.sample_text);
+        TextView tv = findViewById(R.id.sample_text);
         tv.setText(stringFromJNI());
     }
 
