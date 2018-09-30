@@ -30,6 +30,7 @@ public class ProcessImageActivity extends AppCompatActivity {
 
     static {
         System.loadLibrary("reference");
+        System.loadLibrary("native-lib");
     }
 
     RectF cropRect;
@@ -40,6 +41,7 @@ public class ProcessImageActivity extends AppCompatActivity {
 
     Bitmap image;
     File tessDataDir;
+    File tessConfigFile;
 
     boolean processingDone;
     String processingResult;
@@ -120,7 +122,9 @@ public class ProcessImageActivity extends AppCompatActivity {
     }
 
     private Bitmap loadCroppedImage() {
+        int rotation = Utils.getImageRotation(getContentResolver(), imageUri);
         Bitmap b = Utils.loadImageSelection(getContentResolver(), imageUri, cropRect);
+        b = Utils.rotateBitmap(b, rotation);
         if (b == null) {
             Log.w(TAG, "could not load image with Uri: " + imageUri);
         }
@@ -132,32 +136,15 @@ public class ProcessImageActivity extends AppCompatActivity {
         Mat toProcess = new Mat();
         File tessdataDir = tessDataDir;
         org.opencv.android.Utils.bitmapToMat(b, toProcess, true);
-        //Table t = doExtractTable(toProcess.getNativeObjAddr());
 
-        processingResult = doExtractTable(toProcess.getNativeObjAddr(), tessdataDir.toString());
+        processingResult = doExtractTable(toProcess.getNativeObjAddr(), tessdataDir.toString(), tessConfigFile.toString());
         Log.d(TAG, "doProcessImage() finished");
         processingDone = true;
     }
 
     //public native Table doExtractTable(long matAddr);
-    public native String doExtractTable(long matAddr, String tessdataPath);
+    public native String doExtractTable(long matAddr, String tessdataPath, String tessConfigFile);
 
-    // files dir  /data/user/0/com.machfour.koala/files
-    // external files dir: /storage/emulated/0/Android/data/com.machfour.koala/files
-    private File getTessDataDir() {
-        File externalFilesDir = getExternalFilesDir(null);
-        File tessdata = null;
-        if (externalFilesDir != null) {
-            tessdata = new File(externalFilesDir, "tessdata");
-            if (!tessdata.exists()) {
-                Log.d(TAG, "tessdata dir doesn't exist, creating");
-                tessdata.mkdir();
-            }
-        } else {
-            Log.w(TAG, "external files dir was null!");
-        }
-        return tessdata;
-    }
 
     private void populateTable(Table t) {
 
@@ -176,7 +163,7 @@ public class ProcessImageActivity extends AppCompatActivity {
             params.setMargins(tablePadding, tablePadding, tablePadding, tablePadding);
             //row.setPadding(tablePadding, tablePadding, tablePadding, tablePadding);
             row.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
-            row.setDividerDrawable(getResources().getDrawable(R.drawable.dark_divider_shape));
+            row.setDividerDrawable(Utils.getDrawable(getResources(), R.drawable.dark_divider_shape));
             for (int j = 0; j < t.getCols(); ++j) {
                 String cellText = t.getText(i, j).trim();
                 TextView v = new TextView(this);
@@ -211,7 +198,8 @@ public class ProcessImageActivity extends AppCompatActivity {
         }
         image = null;
         processingDone = false;
-        tessDataDir = getTessDataDir();
+        tessDataDir = Utils.getTessDataDir(this);
+        tessConfigFile = Utils.getTessConfigFile(this);
 
 
     }

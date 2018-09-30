@@ -31,10 +31,6 @@ public class SimpleCameraActivity extends AppCompatActivity {
     static final String INSTANCE_STATE_CAPTURE_URI = "capture_uri";
     static final String INSTANCE_STATE_IMAGE_URI = "image_uri";
 
-    ImageView mImageView;
-    TextView noImageText;
-    Button confirmButton;
-    Button chooseImageButton;
 
     Uri captureURI;
     Uri imageURI;
@@ -64,7 +60,6 @@ public class SimpleCameraActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode != RESULT_OK) {
-            setNoPic();
             return;
         }
         switch (requestCode) {
@@ -83,7 +78,9 @@ public class SimpleCameraActivity extends AppCompatActivity {
                     }
                 }
                 if (imageURI != null) {
-                    setPic(imageURI);
+                    Intent intent = new Intent(this, CropImageActivity.class);
+                    intent.setData(imageURI);
+                    startActivity(intent);
                 } else {
                     Log.w(TAG, "Skipping setPic() with null URI");
                 }
@@ -110,64 +107,11 @@ public class SimpleCameraActivity extends AppCompatActivity {
         captureURI = savedInstanceState.getParcelable(INSTANCE_STATE_CAPTURE_URI);
     }
 
-    private void setNoPic() {
-        toggleImageAltText(true);
-        toggleConfirmButton(false);
-    }
-
-    private void toggleConfirmButton(boolean clickable) {
-        confirmButton.setEnabled(clickable);
-    }
-
-    private void toggleImageAltText(boolean noImage) {
-        int imageViewState = noImage ? View.INVISIBLE : View.VISIBLE;
-        int noImageTextState = noImage ? View.VISIBLE : View.INVISIBLE;
-        mImageView.setVisibility(imageViewState);
-        noImageText.setVisibility(noImageTextState);
-    }
-
-
-    private void setPic(@NonNull Uri imageUri) {
-        int targetW = mImageView.getWidth();
-        int targetH = mImageView.getHeight();
-
-        Bitmap b = Utils.loadImageWithBounds(getContentResolver(), imageUri, targetW, targetH);
-        if (b != null) {
-            mImageView.setImageBitmap(b);
-            toggleImageAltText(false);
-            toggleConfirmButton(true);
-        } else {
-            Log.w(TAG, "setPic(): loading image failed");
-        }
-    }
-
-
-    private void onConfirmImage() {
-        if (imageURI != null) {
-            Intent intent = new Intent(this, CropImageActivity.class);
-            intent.setData(imageURI);
-            startActivity(intent);
-        } else {
-            Log.w(TAG, "onConfirmImage() called but imageURI was null. Not launching CropImageActivity");
-        }
-    }
-
-    private void findViews() {
-        mImageView = findViewById(R.id.imageView);
-        noImageText = findViewById(R.id.noPictureText);
-        confirmButton = findViewById(R.id.confirmImageButton);
-        chooseImageButton = findViewById(R.id.choosePictureButton);
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_camera);
-        findViews();
 
-        confirmButton.setOnClickListener(view -> onConfirmImage());
-        chooseImageButton.setOnClickListener(view -> dispatchGetImageIntent());
-
-        setNoPic();
+        findViewById(R.id.choosePictureButton).setOnClickListener(view -> dispatchGetImageIntent());
     }
 }

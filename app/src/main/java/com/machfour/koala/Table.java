@@ -18,16 +18,20 @@ public class Table {
         return a > b ? a : b;
     }
 
-    public static Table parseFromString(@NonNull String tableString) {
+    public static Table parseFromString(@NonNull String tableString, @NonNull String columnSep) {
         String[] rowStrings = tableString.split("\n");
         List<List<String>> columnSplits = new ArrayList<>();
         int maxColumns = 0;
         for (String rowString : rowStrings) {
-            String[] cells = rowString.split("\f", COLUMN_LIMIT);
+            String[] cells = rowString.split(columnSep, COLUMN_LIMIT);
             maxColumns = max(maxColumns, cells.length);
             columnSplits.add(Arrays.asList(cells));
         }
         return new Table(maxColumns, columnSplits);
+    }
+
+    public static Table parseFromString(@NonNull String tableString) {
+        return parseFromString(tableString, "\f");
     }
 
     public Table(int maxColumns) {

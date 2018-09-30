@@ -19,9 +19,10 @@ public class CropImageActivity extends AppCompatActivity {
     private void loadScaledImage() {
         int imageW = rectangleDrawView.getWidth();
         int imageH = rectangleDrawView.getHeight();
-        Bitmap b = Utils.loadImageWithBounds(getContentResolver(), imageUri, imageW, imageH);
+        int orientation = Utils.getImageRotation(getContentResolver(), imageUri);
+        Bitmap b = Utils.loadUnRotatedImageWithRotatedBounds(getContentResolver(), imageUri, imageW, imageH, orientation);
         if (b != null) {
-            rectangleDrawView.setImageBitmap(b);
+            rectangleDrawView.setImageBitmap(b, orientation);
         } else {
             Log.w(TAG, "could not load image with Uri: " + imageUri);
             rectangleDrawView.setImageBitmap(null);

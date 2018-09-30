@@ -12,6 +12,7 @@
 #include <table.h>
 #include <reference.h>
 #include <utils.h>
+#include <ocrutils.h>
 
 using namespace std;
 using namespace cv;
@@ -46,11 +47,14 @@ jstring JNICALL Java_com_machfour_koala_ProcessImageActivity_doExtractTable(
         JNIEnv *env,
         jobject instance,
         jlong matAddr,
-        jstring tessdataPath ) {
+        jstring tessdataPath,
+        jstring tessConfigFile
+    ) {
 
     tesseract::TessBaseAPI tesseractApi;
     const char *nativeTessdataPath = env->GetStringUTFChars(tessdataPath, JNI_FALSE);
-    if (tesseractInit(tesseractApi, nativeTessdataPath) == -1) {
+    const char *nativeTessConfigFile = env->GetStringUTFChars(tessConfigFile, JNI_FALSE);
+    if (tesseractInit(tesseractApi, nativeTessdataPath, nativeTessConfigFile) == -1) {
         //fprintf(stderr, "Could not initialise tesseract API");
         __android_log_print(ANDROID_LOG_WARN, "doExtractTable()", "Could not initialise tesseract");
         return env->NewStringUTF("");
@@ -60,6 +64,7 @@ jstring JNICALL Java_com_machfour_koala_ProcessImageActivity_doExtractTable(
 
     tesseractApi.End();
     env->ReleaseStringUTFChars(tessdataPath, nativeTessdataPath);
+    env->ReleaseStringUTFChars(tessConfigFile, nativeTessConfigFile);
 
     std::string tableString = outTable.parseableString();
     return env->NewStringUTF(tableString.data());
