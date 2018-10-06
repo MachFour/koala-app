@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -109,9 +112,16 @@ public class ProcessImageActivity extends AppCompatActivity {
         }
     }
 
-    public void onStartProcessing(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_process_image, menu);
+        return true;
+    }
+
+    public void onStartProcessing(MenuItem i) {
         if (!processingDone) {
             doProcessImage(image);
+            Toast.makeText(this, "doProcessImage() finished", Toast.LENGTH_SHORT).show();
             showProcessingResult(processingResult);
         }
     }
@@ -134,10 +144,10 @@ public class ProcessImageActivity extends AppCompatActivity {
 
     public void doProcessImage(Bitmap b) {
         Mat toProcess = new Mat();
-        File tessdataDir = tessDataDir;
         org.opencv.android.Utils.bitmapToMat(b, toProcess, true);
 
-        processingResult = doExtractTable(toProcess.getNativeObjAddr(), tessdataDir.toString(), tessConfigFile.toString());
+        // TODO be able to return error code
+        processingResult = doExtractTable(toProcess.getNativeObjAddr(), tessDataDir.toString(), tessConfigFile.toString());
         Log.d(TAG, "doProcessImage() finished");
         processingDone = true;
     }
@@ -165,7 +175,7 @@ public class ProcessImageActivity extends AppCompatActivity {
             row.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
             row.setDividerDrawable(Utils.getDrawable(getResources(), R.drawable.dark_divider_shape));
             for (int j = 0; j < t.getCols(); ++j) {
-                String cellText = t.getText(i, j).trim();
+                String cellText = " " + t.getText(i, j).trim() + " ";
                 TextView v = new TextView(this);
                 v.setText(cellText);
                 row.addView(v, j);
@@ -200,6 +210,8 @@ public class ProcessImageActivity extends AppCompatActivity {
         processingDone = false;
         tessDataDir = Utils.getTessDataDir(this);
         tessConfigFile = Utils.getTessConfigFile(this);
+        Log.d(TAG, "tessDataDir: " + tessDataDir.getAbsolutePath());
+        Log.d(TAG, "tessConfigFile: " + tessConfigFile.getAbsolutePath());
 
 
     }

@@ -64,6 +64,8 @@ file(GLOB REFERENCE_SOURCES
     ${REFERENCE_PATH}/*.cpp
     ${REFERENCE_PATH}/*.h
 )
+# remove main.cpp
+list(REMOVE_ITEM REFERENCE_SOURCES ${REFERENCE_PATH}/main.cpp)
 
 add_library(reference
             SHARED

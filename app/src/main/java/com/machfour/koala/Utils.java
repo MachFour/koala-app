@@ -293,7 +293,7 @@ public class Utils {
         File tessdata = new File(parentDir, "tessdata");
         if (!tessdata.exists()) {
             Log.d(TAG, "tessdata dir doesn't exist, creating");
-            tessdata.mkdir();
+            tessdata.mkdirs();
         }
         return tessdata;
     }
