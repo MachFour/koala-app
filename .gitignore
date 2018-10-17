@@ -1,9 +1,7 @@
 *.iml
 .gradle
 /local.properties
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
+/.idea
 .DS_Store
 /build
 /captures
@@ -14,6 +12,9 @@ gradle/
 OpenCV-android-sdk
 gradlew
 reference
+koala
 *.zip
 *.bat
 app/src/main/res/mipmap*
+app/src/test
+app/src/androidTest

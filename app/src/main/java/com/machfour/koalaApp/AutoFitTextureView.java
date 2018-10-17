@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 /*
  * Copyright 2014 The Android Open Source Project

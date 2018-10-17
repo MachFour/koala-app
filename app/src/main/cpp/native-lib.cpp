@@ -11,7 +11,6 @@
 
 #include <table.h>
 #include <reference.h>
-#include <utils.h>
 #include <ocrutils.h>
 
 using namespace std;
@@ -20,7 +19,7 @@ using namespace cv;
 extern "C" {
 
 JNIEXPORT
-jstring JNICALL Java_com_machfour_koala_MainActivity_stringFromJNI(
+jstring JNICALL Java_com_machfour_koalaApp_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
     std::string hello = "Hello from C++";
@@ -29,11 +28,7 @@ jstring JNICALL Java_com_machfour_koala_MainActivity_stringFromJNI(
 
 
 JNIEXPORT
-void JNICALL Java_com_machfour_koala_OpenCVActivity_salt(
-        JNIEnv *env,
-        jobject instance,
-        jlong matAddrGray,
-        jint nbrElem) {
+void JNICALL Java_com_machfour_koalaApp_OpenCVActivity_salt(JNIEnv *env, jobject instance, jlong matAddrGray, jint nbrElem) {
     Mat &mGr = *(Mat *) matAddrGray;
     for (int k = 0; k < nbrElem; k++) {
         int i = rand() % mGr.cols;
@@ -43,14 +38,8 @@ void JNICALL Java_com_machfour_koala_OpenCVActivity_salt(
 }
 
 JNIEXPORT
-jstring JNICALL Java_com_machfour_koala_ProcessImageActivity_doExtractTable(
-        JNIEnv *env,
-        jobject instance,
-        jlong matAddr,
-        jstring tessdataPath,
-        jstring tessConfigFile
-    ) {
-
+jstring JNICALL Java_com_machfour_koalaApp_ProcessImageActivity_doExtractTable(
+        JNIEnv *env, jobject instance, jlong matAddr, jstring tessdataPath, jstring tessConfigFile) {
     tesseract::TessBaseAPI tesseractApi;
     const char *nativeTessdataPath = env->GetStringUTFChars(tessdataPath, JNI_FALSE);
     const char *nativeTessConfigFile = env->GetStringUTFChars(tessConfigFile, JNI_FALSE);

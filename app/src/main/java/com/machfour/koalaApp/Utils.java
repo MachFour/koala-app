@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -293,7 +293,10 @@ public class Utils {
         File tessdata = new File(parentDir, "tessdata");
         if (!tessdata.exists()) {
             Log.d(TAG, "tessdata dir doesn't exist, creating");
-            tessdata.mkdirs();
+            boolean mkDirSuccess = tessdata.mkdirs();
+            if (!mkDirSuccess) {
+                Log.w(TAG, "getTessDataDir(): tessdata.mkdirs() failed");
+            }
         }
         return tessdata;
     }
@@ -310,7 +313,10 @@ public class Utils {
             Log.e(TAG, "external files dir was null!");
             throw new IllegalStateException("No external files directory");
         } else if (!externalFilesDir.exists()) {
-            externalFilesDir.mkdirs();
+            boolean mkDirSuccess = externalFilesDir.mkdirs();
+            if (!mkDirSuccess) {
+                Log.w(TAG, "ensureExternalFilesDir(): externalFilesDir.mkdirs() failed");
+            }
         }
         return externalFilesDir;
     }

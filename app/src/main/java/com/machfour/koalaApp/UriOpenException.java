@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

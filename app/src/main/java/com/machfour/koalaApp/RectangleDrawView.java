@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 import android.content.Context;
 import android.graphics.Bitmap;

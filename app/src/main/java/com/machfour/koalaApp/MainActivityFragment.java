@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;

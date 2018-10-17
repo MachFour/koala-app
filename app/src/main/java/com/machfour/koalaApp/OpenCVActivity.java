@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

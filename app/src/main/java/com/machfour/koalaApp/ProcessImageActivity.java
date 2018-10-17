@@ -1,4 +1,4 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
 import android.graphics.Bitmap;
 import android.graphics.RectF;
@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -32,7 +31,7 @@ public class ProcessImageActivity extends AppCompatActivity {
     private static final String STATE_PROCESSING_RESULT = "processing_result";
 
     static {
-        System.loadLibrary("reference");
+        System.loadLibrary("koala");
         System.loadLibrary("native-lib");
     }
 
@@ -212,7 +211,12 @@ public class ProcessImageActivity extends AppCompatActivity {
         tessConfigFile = Utils.getTessConfigFile(this);
         Log.d(TAG, "tessDataDir: " + tessDataDir.getAbsolutePath());
         Log.d(TAG, "tessConfigFile: " + tessConfigFile.getAbsolutePath());
-
+        if (!tessDataDir.exists()) {
+            Log.e(TAG, "tessDataDir does not exist!");
+        }
+        if (!tessConfigFile.exists()) {
+            Log.e(TAG, "tessConfigFile does not exist!");
+        }
 
     }
 }

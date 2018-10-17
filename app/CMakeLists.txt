@@ -53,23 +53,23 @@ set_target_properties(lib_pngt PROPERTIES IMPORTED_LOCATION ${TESS_LIB_PATH}/lib
 add_library(lib_jpgt SHARED IMPORTED)
 set_target_properties(lib_jpgt PROPERTIES IMPORTED_LOCATION ${TESS_LIB_PATH}/libjpgt.so)
 
-# My code: 'Reference'
+# My code: 'Koala'
 
-set(REFERENCE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../reference)
+set(KOALA_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../koala)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DREFERENCE_ANDROID")
 
-include_directories(${REFERENCE_PATH})
+include_directories(${KOALA_PATH})
 
-file(GLOB REFERENCE_SOURCES
-    ${REFERENCE_PATH}/*.cpp
-    ${REFERENCE_PATH}/*.h
+file(GLOB KOALA_SOURCES
+    ${KOALA_PATH}/*.cpp
+    ${KOALA_PATH}/*.h
 )
 # remove main.cpp
-list(REMOVE_ITEM REFERENCE_SOURCES ${REFERENCE_PATH}/main.cpp)
+list(REMOVE_ITEM KOALA_SOURCES ${KOALA_PATH}/main.cpp)
 
-add_library(reference
+add_library(koala
             SHARED
-            ${REFERENCE_SOURCES})
+            ${KOALA_SOURCES})
 
 # Sample
 
@@ -106,11 +106,11 @@ find_library( # Sets the name of the path variable.
 target_link_libraries( # Specifies the target library.
                        native-lib
                        lib_opencv
-                       reference
+                       koala
                        log
                        )
 
-target_link_libraries(  reference
+target_link_libraries(  koala
                         ${OpenCV_LIBRARIES}
                         lib_tesseract
                         lib_lept

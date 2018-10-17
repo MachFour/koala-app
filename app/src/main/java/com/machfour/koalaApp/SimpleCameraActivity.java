@@ -1,24 +1,22 @@
-package com.machfour.koala;
+package com.machfour.koalaApp;
 
+import android.Manifest;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
-
-import static com.machfour.koala.Config.FILE_PROVIDER_AUTHORITY;
-import static com.machfour.koala.Config.IMAGE_CACHE_SUBDIR;
+import java.util.Locale;
 
 // Activity to choose or take a photo (intent fulfilled by another app) and then display it
 
@@ -31,6 +29,27 @@ public class SimpleCameraActivity extends AppCompatActivity {
     static final String INSTANCE_STATE_CAPTURE_URI = "capture_uri";
     static final String INSTANCE_STATE_IMAGE_URI = "image_uri";
 
+    static final String[] permissionsNeeded;
+    static final String[] permissionNames;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 16) {
+            permissionsNeeded = new String[] {
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+            permissionNames = new String[] {
+                    "Use camera",
+                    "Read External Storage",
+                    "Write external Storage"
+            };
+        } else {
+            permissionsNeeded = new String[] { Manifest.permission.CAMERA };
+            permissionNames = new String[] { "Use camera"};
+        }
+
+    }
 
     Uri captureURI;
     Uri imageURI;
@@ -101,6 +120,24 @@ public class SimpleCameraActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+                // If request is cancelled, the result arrays are empty.
+                for (int i = 0; i < grantResults.length; ++i) {
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        // same order as in the ActivityCompat.requestPermissions call
+                        String message = String.format(Locale.ENGLISH, "Permission %d (%s) not granted", i, permissionNames[i]);
+                        Log.w(TAG, message);
+                        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+                break;
+        }
+    }
+
+    @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         imageURI = savedInstanceState.getParcelable(INSTANCE_STATE_IMAGE_URI);
@@ -111,6 +148,8 @@ public class SimpleCameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simple_camera);
+        // Permissions for Android 6+
+        ActivityCompat.requestPermissions(this, permissionsNeeded, 1);
 
         findViewById(R.id.choosePictureButton).setOnClickListener(view -> dispatchGetImageIntent());
     }

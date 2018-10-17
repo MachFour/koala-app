@@ -60,7 +60,7 @@
             />
 
         <!-- init image view to have completely transparent background-->
-        <com.machfour.koala.RectangleDrawView
+        <com.machfour.koalaApp.RectangleDrawView
             android:id="@+id/rectangleDraw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
