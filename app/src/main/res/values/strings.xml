@@ -1,5 +1,6 @@
 <resources>
-    <string name="app_name">Koala</string>
+    <string name="app_name_short">KOALA</string>
+    <string name="app_name">KOALA Demo</string>
     <string name="action_settings">Settings</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -19,6 +20,31 @@
 
     <!-- SimpleCameraActivity -->
     <string name="image_content_description">your image</string>
+
+    <string name="cropImageHelpText"><![CDATA[
+        Drag your finger to draw a rectangle enclosing the nutrition table. Drag again to redraw.
+        Try to fit the rectangle as closely as possible around the table area.
+        \n\nPress \'Continue\' in the top right-hand corner when done.
+        ]]>
+    </string>
+    <string name="openingTitle">Smartphone-based Extraction of Nutrition Information\nfrom Food Label Images</string>
+    <string name="openingAuthor">by Max Fisher</string>
+    <string name="openingSupervisor">supervised by A/Prof Julien Epps</string>
+    <string name="openingSubTitle1">Prototype app demo</string>
+    <string name="openingHelpText">
+        <![CDATA[
+        This app demonstrates the nutrition information extraction algorithm running in real time.
+        \n\nTo get started, either choose a nutrition label image from the dataset or take a photo of one.
+        \n\nFor best results when capturing a new label image, keep the label text upright and make sure the text is in focus.
+        ]]>
+    </string>
+
+    <string name="processingHelpText">
+        <![CDATA[
+        Press \'Start processing\' in the top right hand corner to begin processing.
+        \n\nWhen the algorithm has finished running, the detected table will be displayed here.
+        ]]>
+    </string>
 
 
 </resources>

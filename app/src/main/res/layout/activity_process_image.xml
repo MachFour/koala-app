@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ProcessImageActivity">
 
     <ImageView
         android:id="@+id/processingImage"
@@ -32,7 +32,7 @@
         app:layout_constraintGuide_percent="0.35"
         />
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
@@ -40,22 +40,72 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:fillViewport="true"
+        android:id="@+id/helpFrame"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guideline2"
         >
-
-        <!--android:stretchColumns="0"
-        android:shrinkColumns="0"-->
-        <TableLayout
-            android:id="@+id/processingTable"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            >
-        </TableLayout>
-    </ScrollView>
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="@string/processingHelpText"
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:id="@+id/tableFrame"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/guideline2"
+    >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detected Table"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true" >
+
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                >
+
+                <!--android:stretchColumns="0"
+                android:shrinkColumns="0"-->
+                <TableLayout
+                    android:id="@+id/processingTable"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:divider="@drawable/dark_divider_shape"
+                    android:showDividers="beginning|end"
+                    android:layout_gravity="center_horizontal"
+                    >
+                </TableLayout>
+            </ScrollView>
+        </HorizontalScrollView>
+    </LinearLayout>
 
 
 </android.support.constraint.ConstraintLayout>

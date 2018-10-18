@@ -35,14 +35,14 @@ public class SimpleCameraActivity extends AppCompatActivity {
     static {
         if (Build.VERSION.SDK_INT >= 16) {
             permissionsNeeded = new String[] {
-                    Manifest.permission.CAMERA,
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                      Manifest.permission.CAMERA
+                    , Manifest.permission.READ_EXTERNAL_STORAGE
+                    //, Manifest.permission.WRITE_EXTERNAL_STORAGE
             };
             permissionNames = new String[] {
-                    "Use camera",
-                    "Read External Storage",
-                    "Write external Storage"
+                    "Use camera"
+                    , "Read External Storage"
+                    //, "Write external Storage"
             };
         } else {
             permissionsNeeded = new String[] { Manifest.permission.CAMERA };

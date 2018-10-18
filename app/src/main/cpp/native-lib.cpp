@@ -1,17 +1,18 @@
-#include <jni.h>
-#include <string>
-#include <android/log.h>
+#include <table.h>
+#include <reference.h>
+#include <ocrutils.h>
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/features2d/features2d.hpp>
-
-
 #include <baseapi.h>
 
-#include <table.h>
-#include <reference.h>
-#include <ocrutils.h>
+#include <jni.h>
+#include <string>
+#include <vector>
+#include <android/log.h>
+
+
 
 using namespace std;
 using namespace cv;
@@ -49,7 +50,8 @@ jstring JNICALL Java_com_machfour_koalaApp_ProcessImageActivity_doExtractTable(
         return env->NewStringUTF("");
     }
 
-    Table outTable = tableExtract(*(Mat *) matAddr, tesseractApi);
+    std::vector<std::pair<Mat, std::string>> progressImages;
+    Table outTable = tableExtract(*(Mat *) matAddr, tesseractApi, progressImages, true);
 
     tesseractApi.End();
     env->ReleaseStringUTFChars(tessdataPath, nativeTessdataPath);

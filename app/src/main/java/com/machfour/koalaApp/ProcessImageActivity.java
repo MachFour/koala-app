@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +39,8 @@ public class ProcessImageActivity extends AppCompatActivity {
     RectF cropRect;
     Uri imageUri;
 
+    View tableFrame;
+    View helpFrame;
     TableLayout processingTable;
     ImageView processingImage;
 
@@ -48,9 +51,23 @@ public class ProcessImageActivity extends AppCompatActivity {
     boolean processingDone;
     String processingResult;
 
+    private void setHelp(boolean showHelp) {
+        if (showHelp) {
+            tableFrame.setVisibility(View.GONE);
+            helpFrame.setVisibility(View.VISIBLE);
+        } else {
+            helpFrame.setVisibility(View.GONE);
+            tableFrame.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private void initViews() {
         processingImage = findViewById(R.id.processingImage);
         processingTable = findViewById(R.id.processingTable);
+        tableFrame = findViewById(R.id.tableFrame);
+        helpFrame = findViewById(R.id.helpFrame);
+        setHelp(true);
     }
 
     private BaseLoaderCallback _baseLoaderCallback = new BaseLoaderCallback(this) {
@@ -128,6 +145,8 @@ public class ProcessImageActivity extends AppCompatActivity {
     public void showProcessingResult(String tableString) {
         Table extracted = Table.parseFromString(tableString);
         populateTable(extracted);
+        setHelp(false);
+        tableFrame.setVisibility(View.VISIBLE);
     }
 
     private Bitmap loadCroppedImage() {
@@ -157,29 +176,32 @@ public class ProcessImageActivity extends AppCompatActivity {
 
     private void populateTable(Table t) {
 
+        processingTable.removeAllViews();
          //* Converting dp to pixels in code
-        int padding_in_dp = 6;  // 6 dps
+        int paddingWidthDp = 12;
+        int paddingHeightDp = 4;
         final float scale = getResources().getDisplayMetrics().density;
-        int tablePadding = (int) (padding_in_dp * scale + 0.5f);
+        int cellPaddingW = (int) (paddingWidthDp * scale + 0.5f);
+        int cellPaddingH = (int) (paddingHeightDp * scale + 0.5f);
+        TableRow.LayoutParams rowParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        // left, top, right, bottom
+        rowParams.setMargins(paddingWidthDp, paddingHeightDp, paddingWidthDp, paddingHeightDp);
 
         for (int i = 0; i < t.getRows(); ++i) {
             TableRow row = new TableRow(this);
-            TableRow.LayoutParams rowParams = new TableRow.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            rowParams.setMargins(tablePadding, tablePadding, tablePadding, tablePadding);
-            row.setLayoutParams(rowParams);
-
-            TableLayout.LayoutParams params = new TableLayout.LayoutParams();
-            params.setMargins(tablePadding, tablePadding, tablePadding, tablePadding);
+            //TableLayout.LayoutParams params = new TableLayout.LayoutParams();
+            //params.setMargins(tablePadding, tablePadding, tablePadding, tablePadding);
             //row.setPadding(tablePadding, tablePadding, tablePadding, tablePadding);
-            row.setShowDividers(LinearLayout.SHOW_DIVIDER_MIDDLE);
+            row.setShowDividers(LinearLayout.SHOW_DIVIDER_BEGINNING | LinearLayout.SHOW_DIVIDER_MIDDLE | LinearLayout.SHOW_DIVIDER_END);
             row.setDividerDrawable(Utils.getDrawable(getResources(), R.drawable.dark_divider_shape));
             for (int j = 0; j < t.getCols(); ++j) {
                 String cellText = " " + t.getText(i, j).trim() + " ";
                 TextView v = new TextView(this);
                 v.setText(cellText);
-                row.addView(v, j);
+                //row.addView(v, j);
+                row.addView(v, j, rowParams);
             }
-            processingTable.addView(row, params);
+            processingTable.addView(row);
         /*
         View newRowView = getLayoutInflater().inflate(R.layout.food_details_table_row, tableToAddTo, false);
         // even though the IDs are the same in each loop iteration, since the inflated views
